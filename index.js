@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const dotenv = require("dotenv").config();
+require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -14,10 +14,7 @@ const workoutRoutes = require("./routes/workout");
 app.use("/users", userRoutes);
 app.use("/workouts", workoutRoutes);
 
-mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
+mongoose.connect(process.env.MONGODB_URI)
 .then(() => console.log('Connected to MongoDB Atlas'))
 .catch((error) => console.log('Error connecting to MongoDB Atlas:', error));
 

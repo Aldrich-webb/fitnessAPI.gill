@@ -15,31 +15,25 @@ module.exports.addWorkout = (req, res) => {
     });
 
     newWorkout.save()
-        .then(savedWorkout => res.status(201).send({ message: "Workout added successfully", workout: savedWorkout }))
+        .then(savedWorkout => res.status(201).send(savedWorkout))
         .catch(saveErr => {
             console.error("Error in saving the workout: ", saveErr);
             return res.status(500).send({ error: 'Failed to save the workout.' });
         });
 };
 
-
 module.exports.getMyWorkouts = (req, res) => {
     const userId = req.user.id;
 
     Workout.find({ userId: userId })
         .then(workouts => {
-            if (workouts.length > 0) {
-                return res.status(200).send({ workouts });
-            } else {
-                return res.status(404).send({ message: "No workouts found for this user." });
-            }
+            return res.status(200).send({ workouts });
         })
         .catch(err => {
             console.error("Error in finding workouts:", err);
             return res.status(500).send({ error: 'Error finding workouts.' });
         });
 };
-
 
 module.exports.getSingleWorkout = (req, res) => {
     const workoutId = req.params.workoutId;
@@ -57,7 +51,6 @@ module.exports.getSingleWorkout = (req, res) => {
             return res.status(500).send({ error: 'Failed to fetch workout.' });
         });
 };
-
 
 module.exports.updateWorkout = (req, res) => {
     const workoutId = req.params.workoutId;
@@ -87,7 +80,6 @@ module.exports.updateWorkout = (req, res) => {
         return res.status(500).send({ error: 'Error in updating a workout.' });
     });
 };
-
 
 module.exports.completeWorkoutStatus = (req, res) => {
     const workoutId = req.params.workoutId;

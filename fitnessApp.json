@@ -26,17 +26,17 @@
       "description": "Retrieves all workouts for the logged-in user."
     },
     "update_workout": {
-      "url": "/workouts/updateWorkout/688c64ecb95042a4b3e0e1d3",
+      "url": "/workouts/updateWorkout/688c76f538e2043ebeaf6513",
       "method": "PUT",
       "description": "Updates a specific workout for the logged-in user."
     },
     "complete_workout_status": {
-      "url": "/workouts/completeWorkoutStatus/688c64ecb95042a4b3e0e1d3",
+      "url": "/workouts/completeWorkoutStatus/688c76f538e2043ebeaf6513",
       "method": "PUT",
       "description": "Marks a specific workout as completed for the logged-in user."
     },
     "delete_workout": {
-      "url": "/workouts/deleteWorkout/688c64ecb95042a4b3e0e1d3",
+      "url": "/workouts/deleteWorkout/688c76f538e2043ebeaf6513",
       "method": "DELETE",
       "description": "Deletes a specific workout for the logged-in user."
     }

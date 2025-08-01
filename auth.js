@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+
 const secret = "FitnessTrackerAppSecret";
 
 module.exports.createAccessToken = (user) => {
