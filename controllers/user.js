@@ -1,66 +1,85 @@
 const bcrypt = require('bcrypt');
-const User = require("../models/User");
-const auth = require("../auth");
+const User = require('../models/User');
+const auth = require('../auth');
 
-module.exports.registerUser = (req, res) => {
-    if (!req.body.email || !req.body.password) {
-        return res.status(400).send({ error: "Email and password are required" });
-    } else if (!req.body.email.includes("@")) {
-        return res.status(400).send({ error: "Email invalid" });
-    } else if (req.body.password.length < 8) {
-        return res.status(400).send({ error: "Password must be at least 8 characters" });
-    } else {
-        let newUser = new User({
-            email: req.body.email,
-            password: bcrypt.hashSync(req.body.password, 10)
-        });
+const { errorHandler } = auth;
 
-        return newUser.save()
-            .then((user) => res.status(201).send({ message: "Registered Successfully" }))
-            .catch(err => {
-                console.error("Error in saving: ", err);
-                return res.status(500).send({ error: "Error in saving user" });
-            });
+
+module.exports.registerUser = async (req, res) => {
+  const { firstName, lastName, email, mobileNo, password } = req.body;
+
+  if (!email.includes("@")) {
+    return res.status(400).send({ message: 'Email invalid' });
+  }
+
+  if (mobileNo.length !== 11) {
+    return res.status(400).send({ message: 'Mobile number invalid' });
+  }
+
+  if (password.length < 8) {
+    return res.status(400).send({ message: 'Password must be at least 8 characters long' });
+  }
+
+  try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).send({ message: 'Email already in use' });
     }
+
+    const newUser = new User({
+      firstName,
+      lastName,
+      email,
+      mobileNo,
+      password: bcrypt.hashSync(password, 10)
+    });
+
+    await newUser.save();
+    res.status(201).send({ message: 'Registered successfully' });
+  } catch (error) {
+    errorHandler(error, req, res);
+  }
 };
 
-module.exports.loginUser = (req, res) => {
-    if (!req.body.email || !req.body.password) {
-        return res.status(400).send({ error: "Email and password are required" });
-    } else if (req.body.email.includes("@")) {
-        return User.findOne({ email: req.body.email })
-            .then(result => {
-                if (result == null) {
-                    return res.status(404).send({ error: "No user found with that email" });
-                } else {
-                    const isPasswordCorrect = bcrypt.compareSync(req.body.password, result.password);
-                    if (isPasswordCorrect) {
-                        return res.status(200).send({ access: auth.createAccessToken(result) });
-                    } else {
-                        return res.status(401).send({ message: "Email and password do not match" });
-                    }
-                }
-            })
-            .catch(err => {
-                console.error("Error in login:", err);
-                return res.status(500).send({ error: "Error in login" });
-            });
-    } else {
-        return res.status(400).send({ error: "Email invalid" });
+
+module.exports.loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email.includes("@")) {
+    return res.status(400).send({ message: 'Invalid email format' });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).send({ message: 'No email found' });
     }
+
+    const isPasswordCorrect = bcrypt.compareSync(password, user.password);
+    if (!isPasswordCorrect) {
+      return res.status(401).send({ message: 'Incorrect email or password' });
+    }
+
+    const accessToken = auth.createAccessToken(user);
+    res.status(200).send({
+      message: 'User logged in successfully',
+      access: accessToken
+    });
+  } catch (error) {
+    errorHandler(error, req, res);
+  }
 };
 
 module.exports.getProfile = (req, res) => {
     return User.findById(req.user.id)
-        .then(user => {
-            if (!user) {
-                return res.status(404).send({ error: "User not found." });
-            }
-            user.password = undefined;
-            return res.status(200).send({ user });
-        })
-        .catch(err => {
-            console.error("Error in fetching user profile:", err);
-            return res.status(500).send({ error: "Failed to fetch user profile" });
-        });
+    .then(user => {
+
+        if(!user){
+            return res.status(403).send({ message: 'invalid signature' })
+        }else {
+            user.password = "";
+            return res.status(200).send(user);
+        }  
+    })
+    .catch(error => errorHandler(error, req, res));
 };

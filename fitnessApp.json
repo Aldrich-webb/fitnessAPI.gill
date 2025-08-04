@@ -1,44 +1,11 @@
 {
-  "endpoints": {
-    "user_registration": {
-      "url": "/users/register",
-      "method": "POST",
-      "description": "Registers a new user with email and password."
-    },
-    "user_login": {
-      "url": "/users/login",
-      "method": "POST",
-      "description": "Logs in a user and returns an access token."
-    },
-    "get_my_details": {
-      "url": "/users/details",
-      "method": "GET",
-      "description": "Retrieves the logged-in user's details."
-    },
-    "add_workout": {
-      "url": "/workouts/addWorkout",
-      "method": "POST",
-      "description": "Adds a new workout for the logged-in user."
-    },
-    "get_my_workouts": {
-      "url": "/workouts/getmyWorkouts",
-      "method": "GET",
-      "description": "Retrieves all workouts for the logged-in user."
-    },
-    "update_workout": {
-      "url": "/workouts/updateWorkout/688c76f538e2043ebeaf6513",
-      "method": "PUT",
-      "description": "Updates a specific workout for the logged-in user."
-    },
-    "complete_workout_status": {
-      "url": "/workouts/completeWorkoutStatus/688c76f538e2043ebeaf6513",
-      "method": "PUT",
-      "description": "Marks a specific workout as completed for the logged-in user."
-    },
-    "delete_workout": {
-      "url": "/workouts/deleteWorkout/688c76f538e2043ebeaf6513",
-      "method": "DELETE",
-      "description": "Deletes a specific workout for the logged-in user."
+    "endpoints": {
+        "login":"/login",
+        "register":"/register",
+        "addWorkout": "/addWorkout",
+        "getMyWorkouts":"/getMyWorkouts",
+        "updateWorkout":"/updateWorkout",
+        "deleteWorkout":"/deleteWorkout",
+        "completeWorkoutStatus":"/completeWorkoutStatus"
     }
-  }
 }
