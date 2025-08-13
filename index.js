@@ -11,7 +11,7 @@ require('dotenv').config();
 const app = express();
 
 const corsOptions = {
-    origin:['http://localhost:8000'],
+    origin:['https://fitness-app-client-beta-ivory.vercel.app'],
     credentials: true, 
     optionsSuccessStatus: 200
 };
