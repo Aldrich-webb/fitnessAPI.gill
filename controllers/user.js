@@ -6,14 +6,10 @@ const { errorHandler } = auth;
 
 
 module.exports.registerUser = async (req, res) => {
-  const { firstName, lastName, email, mobileNo, password } = req.body;
+  const { email, password } = req.body;
 
   if (!email.includes("@")) {
     return res.status(400).send({ message: 'Email invalid' });
-  }
-
-  if (mobileNo.length !== 11) {
-    return res.status(400).send({ message: 'Mobile number invalid' });
   }
 
   if (password.length < 8) {
@@ -27,10 +23,7 @@ module.exports.registerUser = async (req, res) => {
     }
 
     const newUser = new User({
-      firstName,
-      lastName,
       email,
-      mobileNo,
       password: bcrypt.hashSync(password, 10)
     });
 
